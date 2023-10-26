@@ -66,11 +66,13 @@ CHull.default <-
       
       # 3. Convex hull
       k <- convex_hull(as.matrix(mon_x[,1:2]))
-      index <- which.min(k$resverts)
-      if (length(k$resverts)==index){
-        k2 <- k$resverts[seq(index,1,by=-1)]
+      ## https://github.com/igraph/rigraph/blob/main/NEWS.md#fixed : convex_hull() now returns the vertices of the convex hull with 1-based indexing.
+      resverts_0based <- k$resverts - min(k$resverts)
+      index <- which.min(resverts_0based)
+      if (length(resverts_0based)==index){
+        k2 <- resverts_0based[seq(index,1,by=-1)]
       } else {
-        k2 <- k$resverts[c(seq(index,1,by=-1),seq(length(k$resverts),index+1,by=-1))]
+        k2 <- resverts_0based[c(seq(index,1,by=-1),seq(length(resverts_0based),index+1,by=-1))]
       }      
       index2 <- which.max(k2)
       k3 <- k2[1:index2]

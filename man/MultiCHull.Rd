@@ -11,8 +11,7 @@
 \usage{
 MultiCHull(data, bound = "lower", PercentageFit = 0.01)
 
-\method{plot}{MultiCHull}(x, col = NULL, pch = NULL, whichticks = NULL,
-  las = 2, ...)
+\method{plot}{MultiCHull}(x, col = NULL, pch = NULL, whichticks = NULL, las = 2, ...)
 
 \method{print}{MultiCHull}(x, ...)
 

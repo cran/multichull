@@ -5,15 +5,6 @@
 \title{A Generic Convex-Hull-Based Model Selection Method}
 \description{Given a set of models for which a measure of model (mis)fit and model complexity is provided, CHull() determines the models that are located on the boundary of the convex hull and selects an optimal model by means of the scree test values. 
 }
-\details{
-\tabular{ll}{
-Package: \tab \pkg{multichull}\cr
-Type: \tab Package\cr
-Version: \tab 1.0.0\cr
-Date: \tab 2017-11-16\cr
-License: \tab GPL (>= 2)\cr
-}
-}
 \author{Marlies Vervloet (\email{marlies.vervloet@kuleuven.be})}
 \references{\cite{Wilderjans, T. F., Ceulemans, E., & Meers, K. (2013). CHull: A generic convex hull based model selection method. Behavior Research Methods, 45, 1-15.}
  
