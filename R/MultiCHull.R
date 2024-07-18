@@ -5,7 +5,7 @@
 #' @param data Dataframe with complexity in 1st column and fit measures in next columns
 #' @param bound Boundary of convex hull to inspect: \code{upper} or \code{lower}
 #' @param PercentageFit Required proportion of increase in fit of a more complex model
-#'
+#' @param type Either 'multifit' or 'multicom'
 #' @return \item{st}{Dataframe with scree test values}
 #' \item{tab}{Table which indicates the selected model in each sample}
 #' \item{frq}{Table which indicates how often each model is selected}
@@ -22,24 +22,23 @@
 #' \subsection{Plot function}{
 #' Applying the method \code{plot()} on output of \code{\link{MultiCHull}} yields a plot with the models on the x-axis, ordered by increasing complexity. By default, all model names are shown as perpendicular labels on the x-axis, but one can choose to display specific model names only (e.g., \code{whichticks=c("model13","model20")}). The tick mark labels can be made horizontal, by putting parameter \code{las} to 0.
 #'
-#' Solid lines (only shown in case of 20 or less samples) indicate the scree test values per sample, and symbols indicate the top three of the models per sample. The symbols can be adjusted with the parameter \code{pch} and the colors with \code{col}. The model (or multiple models) that is selected most often across samples, is indicated with a horizontal line. 
+#' Solid lines (only shown in case of 20 or less samples) indicate the scree test values per sample, and symbols indicate the top three of the models per sample. The symbols can be adjusted with the parameter \code{pch} and the colors with \code{col}. The model (or multiple models) that is selected most often across samples, is indicated with a horizontal line.
 #' }
 #' @export
 #' @seealso \code{\link{CHull}}
 #' @keywords models
 #' @examples
-#' data <- cbind(c(305,456,460,607,612,615,758,764,768,770,909,916,921,924),
-#' c(152,89,79,71,57,57,64,49,47,47,60,41,39,39))
-#' test <- array(rnorm(14*20,sd=2.5),c(14,20))
-#' for (i in 1:20){
-#'   data <- cbind(data,data[,2]+test[,i])
-#' }
-#' 
+#' data <- data.frame("comp"= c(305,456,460,607,612,615,758,764,768,770,909,916,921,924),
+#'"fit"= c(152,89,79,71,57,57,64,49,47,47,60,41,39,39))
+#'test <- array(rnorm(14*20,sd=2.5),c(14,20))
+#'for (i in 1:20){
+#'  data <- cbind(data, 'fit' = data[,2]+test[,i])
+#'}
 #' output <- MultiCHull(data)
 #' summary(output)
 #' plot(output)
-#' 
+#'
 MultiCHull <-
-  function(data, bound = "lower", PercentageFit = .01){
+  function(data, bound = "lower", PercentageFit = 1, type = 'multifit'){
     UseMethod("MultiCHull")
   }

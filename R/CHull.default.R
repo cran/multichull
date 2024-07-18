@@ -1,8 +1,12 @@
 #' @export
 CHull.default <-
-  function(data, bound = "lower", PercentageFit = .01){
+  function(data, bound = "lower", PercentageFit = 0.01){
     Error <- 0
-    
+
+    if( !(PercentageFit >= 0 & PercentageFit <= 1) ){
+      stop('PercentageFit should be a number between 0 and 1')
+    }
+
     # CHECK DATA
     N <- nrow(data)
     J <- ncol(data)
@@ -14,7 +18,7 @@ CHull.default <-
     }
     check <- rownames(data)==as.character(1:N)
     if (sum(check)==N){
-      rownames(data) <- paste("model",1:N,sep="") 
+      rownames(data) <- paste("model",1:N,sep="")
     }
     colnames(data) <- c("complexity","fit")
     data <- cbind(data,1:N)
@@ -31,7 +35,7 @@ CHull.default <-
         print("WARNING: Check whether input parameter 'bound' is specified correctly")
       }
     }
-    
+
     # ANALYSIS
     # 1. Retain best model per complexity
     UniqueComplex <- unique(data[,1])
@@ -41,12 +45,12 @@ CHull.default <-
     I <- array(NA,c(nUniqueComplex,1))
     for (teller in 1:nUniqueComplex){
       tempdata <- data[which(data[,1]==UniqueComplex[teller]),]
-      tempindex <- which.min(tempdata[,2]) 
+      tempindex <- which.min(tempdata[,2])
       I[teller] <- tempdata[tempindex,3]
       I[teller] <- which(data[,3]==I[teller])
     }
     red_x <- data[I,]
-    
+
     # 2. Monotonical decrease
     Go_on <- T
     mon_x <- red_x
@@ -63,7 +67,7 @@ CHull.default <-
       print(ErrorMess)
       results <- ErrorMess
     } else {
-      
+
       # 3. Convex hull
       k <- convex_hull(as.matrix(mon_x[,1:2]))
       ## https://github.com/igraph/rigraph/blob/main/NEWS.md#fixed : convex_hull() now returns the vertices of the convex hull with 1-based indexing.
@@ -73,7 +77,7 @@ CHull.default <-
         k2 <- resverts_0based[seq(index,1,by=-1)]
       } else {
         k2 <- resverts_0based[c(seq(index,1,by=-1),seq(length(resverts_0based),index+1,by=-1))]
-      }      
+      }
       index2 <- which.max(k2)
       k3 <- k2[1:index2]
       k3 <- k3+1
@@ -84,7 +88,7 @@ CHull.default <-
       FitDiff[2:N_remain] <- (conv_x[1:(N_remain-1),2] - conv_x[2:N_remain,2]) / abs(conv_x[1:(N_remain-1),2])
       conv_x <- conv_x[which(FitDiff>=PercentageFit),]
       N_remain <- nrow(conv_x)
-      
+
       # 4. Compute st values
       st <- array(NA,c(N_remain,1))
       if (N_remain>2){
@@ -98,24 +102,24 @@ CHull.default <-
         hull <- SelectedSol <- conv_x[,1:2]
         hull["st"] <- st
       }
-      
-      
+
+
       # CHECK MULTIPLE SOLUTIONS
       Multi <- intersect( which( data[,1]==SelectedSol[1,1] ) , which( data[,2]==SelectedSol[1,2] ) )
       if (N_remain==2){
         Multi2 <- intersect( which( data[,1]==SelectedSol[2,1] ) , which( data[,2]==SelectedSol[2,2] ) )
         Solution <- data[c(Multi,Multi2),1:2]
       } else {
-        Solution <- data[Multi,1:2]
+        Solution <- data.frame(data[Multi,1:2],st=max(st, na.rm = TRUE))
       }
-      
+
       # OUTPUT
       if (bound=="upper"){
         Solution[,2] <- Solution[,2]*-1
         hull[,2] <- hull[,2]*-1
         data[,2] <- data[,2]*-1
       }
-      results <- list(Solution=Solution,Hull=hull,OrigData=data[,1:2],Bound=bound,PercentageFit=PercentageFit)
+      results <- list(Solution=Solution,Hull=hull,OrigData=data[,1:2],Bound=bound,PercentageFit=PercentageFit*100)
       class(results) <- "CHull"
     }
     return(results)

@@ -5,7 +5,7 @@ summary.CHull <-
   function(object, ...){
     cat("SETTINGS BY USER:\n")
     cat(paste(paste("Optimalization: ",object$Bound,sep="")," bound\n",sep=""))
-    cat(paste(paste("Required improvement in fit:",as.character(round(object$PercentageFit*100))),"%\n",sep=""))
+    cat(paste(paste("Required improvement in fit:",as.character(object$PercentageFit)),"%\n",sep=""))
     cat(paste(paste("Number of considered models:",as.character(nrow(object$OrigData))),"\n\n"))
     cat("RESULTS:\n")
     nSol <- nrow(object$Solution)

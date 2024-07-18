@@ -7,7 +7,7 @@ summary.MultiCHull <-
     n_Multi <- ncol(object$OrigData)-1
     cat("SETTINGS BY USER:\n")
     cat(paste(paste("Optimalization: ",object$Bound,sep="")," bound\n",sep=""))
-    cat(paste(paste("Required improvement in fit:",as.character(round(object$PercentageFit*100))),"%\n",sep=""))
+    cat(paste(paste("Required improvement in fit:",as.character(object$PercentageFit)),"%\n",sep=""))
     cat(paste(paste("Number of considered models:",as.character(nrow(object$OrigData))),"\n"))
     cat(paste(paste("Number of samples:",as.character(n_Multi)),"\n\n"))
     cat("SELECTED MODELS:\n")
@@ -22,11 +22,13 @@ summary.MultiCHull <-
     }
     cat("\nSCREE TEST VALUES\n")
     if (n_Multi<12){
-      print(round(object$st),2)
+      print(round(object$st,2))
     } else {
       index <- which(apply(object$st,1,na.rm=T,sum)>0)
-      print(round(object$st[index,]),2)
+      print(round(object$st[index,],2))
     }
-    
-    
+
+
   }
+
+

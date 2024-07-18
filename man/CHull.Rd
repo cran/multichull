@@ -9,9 +9,9 @@
 \alias{summary.CHull}
 \title{A Generic Convex-Hull-Based Model Selection Method}
 \usage{
-CHull(data, bound = "lower", PercentageFit = 0.01)
+CHull(data, bound = "lower", PercentageFit = 1)
 
-\method{plot}{CHull}(x, col = NULL, pch = NULL, ...)
+\method{plot}{CHull}(x, col = NULL, pch = NULL, plottype = "static", ...)
 
 \method{print}{CHull}(x, ...)
 
@@ -30,6 +30,8 @@ CHull(data, bound = "lower", PercentageFit = 0.01)
 
 \item{pch}{Symbol used to indicate selected model(s)}
 
+\item{plottype}{Type of plot. Either 'interactive' or 'static'}
+
 \item{...}{Additional arguments}
 
 \item{object}{An object of the type produced by \code{\link{CHull}}}
@@ -46,7 +48,7 @@ Given a set of models for which a measure of model (mis)fit and model complexity
 }
 \section{Details}{
 
-The CHull method (Wilderjans, Ceulemans, & Meers, 2013) can be used for selecting a model by comparing model complexities (1st column of the input parameter \code{data}) and fit values (2nd column). 
+The CHull method (Wilderjans, Ceulemans, & Meers, 2013) can be used for selecting a model by comparing model complexities (1st column of the input parameter \code{data}) and fit values (2nd column).
 
 In a first step, only the best model (or one of the best, if some models have an equal fit) is retained per complexity. This should be a model with a high fit value if the fit measure indicates goodness-of-fit  (\code{bound="upper"}) and a low fit value if it indicates badness-of-fit (\code{bound="upper"}). A warning will be generated if the sign of the correlation between complexity and fit is counterintuitive in this regard.
 

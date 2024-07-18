@@ -1,20 +1,12 @@
-shinyServer(function(input , output){
-  
+#library(plotly)
+#library(multichull)
+#library(shinythemes)
+#library(DT)
+shinyServer(function(input , output, session){
+
+
   ############# Load data operations
-  
-  # help button
-  observeEvent(eventExpr = input$helpload1, handlerExpr = {
-    output$helpOutput <- renderText({
-      "text on"
-    })
-  })
-  
-  observeEvent(eventExpr = input$helpload2, handlerExpr = {
-    output$helpOutput <- renderText({
-      ""
-    })
-  })
-  
+
   #load files
   # function to load data
   data <- reactive({
@@ -22,72 +14,113 @@ shinyServer(function(input , output){
     if(is.null(file)){
       return(NULL)
     }
-    dat <- read.csv(file = file$datapath, header = T, sep = ",")
-    dat <- cbind("Complexity" = dat$V1, "(mis-) fit" = dat$V2)
+    dat <- read.csv(file = file$datapath, header = T, sep = "\t")
+    if(ncol(dat) == 2){
+      dat <- cbind("Complexity" = dat[,1], "(mis-) fit" = dat[,2])
+      dat <- cbind(model = 1:nrow(dat),dat)
+    }else{
+      #name <- c('Complexity', rep('(mis-) fit', ncol(dat)-1))
+      #colnames(dat) <- name
+
+      dat <- cbind(model = 1:nrow(dat),dat)
+    }
+
     return(dat)
   })
-  output$ui <- renderTable({
-    dat <- data()
-    dat
-  })# end render table
-  
+
+  output$ui <- DT::renderDataTable({
+    DT::datatable(data(), rownames = TRUE, filter = 'top', editable = TRUE)
+
+  })
+
+
+
 
   ############# Chull options
- 
+
   # start chull
-  
+  but1 = reactiveValues(but1=FALSE)
+  but2 = reactiveValues(but2=FALSE)
+
+  observeEvent(input$stChull,
+               isolate({but1$but1=TRUE
+               but2$but2=FALSE
+               }))
+
+  observeEvent(input$stMultiChull,
+               isolate({but1$but1=FALSE
+               but2$but2=TRUE
+               }))
+
   chullstart <- eventReactive(input$stChull, {
-    CHull(data(),input$bound,input$PercentageFit)
+    multichull::CHull(data()[,-1],input$bound,input$PercentageFit)
+
+  })
+
+  # start multichull
+
+  Multichullstart <- eventReactive(input$stMultiChull, {
+    multichull::MultiCHull(data()[,-1],input$boundM,input$PercentageFitM, input$typeMC)
   })
 
   ############# Results
-  
+
   ### summary tables
   output$print <- renderPrint({
-    print(chullstart())
+    if(but1$but1)
+      print(chullstart())
+    else if(but2$but2)
+      print(Multichullstart())
+    else
+      return()
   })
   output$summary <- renderPrint({
-    summary(chullstart())
-  })
-  
-  ### plotly
-  output$plotly <- renderPlotly({
-    ch <- chullstart()
-    
-    line <- list(
-      type = "line",
-      line = list(dash='dot', width = 1, color = "black"),
-      xref = "x",
-      yref = "y"
-    )
-    
-    len <- nrow(ch$Hull)
-    lines <- list()
-    for (i in 2:len) {
-      line[["x0"]] <- ch$Hull$complexity[i-1]
-      line[["x1"]] <- ch$Hull$complexity[i]
-      line[["y0"]] <- ch$Hull$fit[i-1]
-      line[["y1"]] <- ch$Hull$fit[i]
-      lines <- c(lines, list(line))
-    }
-    
-    a <- list(
-      x=ch$Solution$complexity, y=ch$Solution$fit,
-      text = "Selected model", showarrow=TRUE,
-      arrowhead=7, ax=-20, ay=20
-    )
-    
-    plot_ly(data=ch$OrigData, x = ~complexity, 
-            y = ~fit, mode = 'markers', type = 'scatter',
-            text = ~paste("Fit: ", fit, "Complexity: ", complexity)) %>% 
-      
-      layout(title = "Convex hull",
-             annotations=a,
-             shapes=lines)
+    if(but1$but1)
+      summary(chullstart())
+    else if(but2$but2)
+      summary(Multichullstart())
+    else
+      return()
+
   })
 
-  ############# Save
-  
-  ############# About
-  
+
+  ### plotly
+  output$plotly <- renderPlotly({
+
+    if(but1$but1){
+      ch <- chullstart()
+      plot(ch, plottype = 'interactive')
+    }else if(but2$but2){
+     mch <- Multichullstart()
+     if(class(mch) == 'MultiCHullcom'){
+       # do nothing
+     }else{
+       plot(mch, plottype = 'interactive')
+     }
+
+    }else
+      return()
+  })
+
+  ### plotly
+  output$plotlycom <- renderPlotly({
+
+    if(but1$but1){
+     # ch <- chullstart()
+     #  plot(ch, plottype = 'interactive')
+    }else if(but2$but2){
+      mchcom <- Multichullstart()
+      if(class(mchcom) == 'MultiCHullcom'){
+        # do nothing
+      }else{
+        plot(mchcom, plottype = 'interactive')
+      }
+
+    }else
+      return()
+  })
+
+
+
 })# shinyServer
