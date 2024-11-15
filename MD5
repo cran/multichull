@@ -1,6 +1,6 @@
-48106f11d9929949313548fa91fd0c3a *DESCRIPTION
+401d989900ebf10828daf6f66fe571c0 *DESCRIPTION
 f836d45325189129183605e62d0ecd99 *NAMESPACE
-f94339e8d0fee6b1683bd85f312dbf67 *NEWS.md
+558be8347d578d8e42d8681af97f2502 *NEWS.md
 1f41dee1d49d080aecda51e57e46ff9a *R/CHull.R
 4d85047c4a61b7b2ef42356a32dd5bc7 *R/CHull.default.R
 e773fd05b4290e86cb996f486fde4529 *R/MultiCHull.R
@@ -9,7 +9,7 @@ b0d78820ee76b72ea6befd9a5dc23385 *R/chulldata.R
 677cbad3b969dcfe1606d2999eb5b7d5 *R/chulldataboot.R
 f9edd4096efe8bcabe3aeb97cece1341 *R/plot.CHull.R
 a87da4535b8abd7d5f3a591af139d0ff *R/plot.MultiCHull.R
-21c18d65b215902b5b400fa7cb538a2a *R/plot.MultiCHullcom.R
+fff1c0ed9e137a32f6393580c5e21c20 *R/plot.MultiCHullcom.R
 a61e6786ed5d5af8515b8189c6789426 *R/print.CHull.R
 4c2fb186cc4ac89707f45f47ffc0651d *R/print.MultiCHull.R
 d3bfe1ccc5d5bd1d6e2d9557e6c8ee67 *R/runShinyApp.R

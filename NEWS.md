@@ -1,3 +1,6 @@
+## version 3.0.1
+- Bugfix for plotting MultiChull [jdurieux]
+
 ## version 3.0.0
 - Breaking change: Rollback the `PercentageFit` parameter in the `CHull` and `MultiCHull` functions now accepts values ranging from 0 to 1. So revert to 1.x.y behavior. [jdurieux]
 - Breaking change: Set `plottype='static'` as the default plot type [jdurieux]

@@ -13,7 +13,7 @@ plot.MultiCHullcom <- function(x, browser=FALSE, ...){
 
     plots <- list()
     for(i in 1:length(datalist)){
-      plots[[i]] <- plot(datalist[[i]], type = 'interactive')
+      plots[[i]] <- plot(datalist[[i]], plottype = 'interactive')
     }
 
     names(plots) <- paste('Complexity ', 1:length(plots), sep = '')
